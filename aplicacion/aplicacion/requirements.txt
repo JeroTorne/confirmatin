@@ -1,0 +1,14 @@
+flask==2.3.3
+Django==5.1.7
+google-cloud-storage==2.8.0
+google-api-python-client==2.100.0
+google-auth==2.29.0
+google-auth-oauthlib==1.2.0
+schedule==1.2.0
+azure-keyvault==4.2.0
+azure-keyvault-secrets==4.10.0
+azure-identity==1.23.0
+microsoft-azure-cli==2.74.0
+
+# python-version=3.13.2
+# pip-version=25.1.1
