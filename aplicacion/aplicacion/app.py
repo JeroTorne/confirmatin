@@ -17,7 +17,7 @@ app = Flask(__name__)
 
 
 # ---------------- CONFIGURACIÓN AZURE KEY VAULT ----------------
-KEY_VAULT_NAME = "app-confirmacion"
+KEY_VAULT_NAME = "credencial"
 KV_URI = f"https://{KEY_VAULT_NAME}.vault.azure.net"
 credential = DefaultAzureCredential()
 secret_client = SecretClient(vault_url=KV_URI, credential=credential)
@@ -330,7 +330,7 @@ def enviar_mensajes_resena():
         print(f"Error al enviar mensajes de reseña: {e}")
 
 def run_scheduler():
-    schedule.every().hour.at(":10").do(job)  # Confirmaciones
+    schedule.every().hour.at(":00").do(job)  # Confirmaciones
     schedule.every().hour.at(":15").do(enviar_mensajes_resena)  # Mensajes de reseña
     while True:
         try:
