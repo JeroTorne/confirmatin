@@ -11,7 +11,6 @@ import schedule
 import time
 import json
 import tempfile
-import re
 
 app = Flask(__name__)
 
@@ -173,7 +172,7 @@ def webhook():
                                                         status = 'confirmed'
                                                         icono = "✅"
                                                     elif button_reply == 'no':
-                                                        color_id = '4'  # Rojo (cancelado)
+                                                        color_id = '11'  # Rojo (cancelado)
                                                         status = 'confirmed'
                                                         icono = "❌"
                                                     else:
@@ -181,8 +180,7 @@ def webhook():
                                                         status = 'tentative'
                                                         icono = "⚠️"
 
-                                                    nombre_paciente = extract_patient_name(event_description)
-                                                    nuevo_titulo = f"{icono} Turno {nombre_paciente}"
+                                                    nuevo_titulo = f"{icono} {event.get('summary', '')}"
 
                                                     print(f"Actualizando evento en {calendar_id} con color_id: {color_id}, status: {status}, título: {nuevo_titulo}")
                                                     try:
@@ -265,9 +263,7 @@ def extract_phone_number(description):
     match = re.search(r'(\d{8,15})', description)
     return match.group(1) if match else None
 
-def extract_patient_name(description):
-    match = re.search(r'Reservada por</b>:\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+)', description)
-    return match.group(1).strip() if match else "Paciente"
+
 
 def send_whatsapp_message(phone, message, whatsapp_token, whatsapp_phone_id):
     url = f"https://graph.facebook.com/v17.0/{whatsapp_phone_id}/messages"
@@ -344,7 +340,7 @@ def enviar_mensajes_resena():
         print(f"Error al enviar mensajes de reseña: {e}")
 
 def run_scheduler():
-    schedule.every().hour.at(":10").do(job)  # Confirmaciones
+    schedule.every().hour.at(":20").do(job)  # Confirmaciones
     schedule.every().hour.at(":15").do(enviar_mensajes_resena)  # Mensajes de reseña
     while True:
         try:
