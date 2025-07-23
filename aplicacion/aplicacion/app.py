@@ -155,7 +155,7 @@ def webhook():
 
                                         # Iterar sobre todos los calendarios configurados
                                         for calendar_id, config in CALENDAR_SECRET_CONFIG.items():
-                                            service = get_service_from_keyvault(get_secret_cached(config["google_credentials_secret"]))
+                                            service = get_service_from_keyvault(config["google_credentials_secret"])
                                             events_result = service.events().list(calendarId=calendar_id, maxResults=500).execute()
                                             events = events_result.get('items', [])
                                             print(f"Eventos obtenidos de {calendar_id}: {len(events)}")
@@ -334,7 +334,7 @@ def enviar_mensajes_resena():
         print(f"Error al enviar mensajes de reseña: {e}")
 
 def run_scheduler():
-    schedule.every().hour.at(":20").do(job)  # Confirmaciones
+    schedule.every().hour.at(":29").do(job)  # Confirmaciones
     schedule.every().hour.at(":15").do(enviar_mensajes_resena)  # Mensajes de reseña
     while True:
         try:
