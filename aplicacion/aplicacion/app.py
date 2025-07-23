@@ -45,25 +45,25 @@ def get_secret(secret_name):
 CALENDAR_SECRET_CONFIG = {
     "corpuskinesiologiasl@gmail.com": {
         "google_credentials_secret": "google-credentials-corpus-vero",
-        "whatsapp_token_secret": "whatsapp-token-podologia-",
+        "whatsapp_token_secret": "whatsapp-token-podologia",
         "whatsapp_phone_id_secret": "phone-id-podologia",
-        "verify_token_secret": "token-cliente-podologia-",
+        "verify_token_secret": "token-cliente-podologia",
         "nombre_empresa": "Verónica Digiannantonio Kinesiología",
         "review_link": "https://g.page/r/CdBheRUiFHb_EBM/review"
     },
     "corpuskinesiologia2@gmail.com": {
         "google_credentials_secret": "google-credentials-corpus-guido",
-        "whatsapp_token_secret": "whatsapp-token-podologia-",
+        "whatsapp_token_secret": "whatsapp-token-podologia",
         "whatsapp_phone_id_secret": "phone-id-podologia",
-        "verify_token_secret": "token-cliente-podologia-",
+        "verify_token_secret": "token-cliente-podologia",
         "nombre_empresa": "Guido Bazzana (R.P.G)",
         "review_link": "https://g.page/r/CdBheRUiFHb_EBM/review"
     },
     # "podologiafisherton@gmail.com": {
     #     "google_credentials_secret": "google-credentials-podologia",
-    #     "whatsapp_token_secret": "whatsapp-token-podologia-",
+    #     "whatsapp_token_secret": "whatsapp-token-podologia",
     #     "whatsapp_phone_id_secret": "phone-id-podologia",
-    #     "verify_token_secret": "token-cliente-podologia-",
+    #     "verify_token_secret": "token-cliente-podologia",
     #     "nombre_empresa": "Veronica Weedon Podología Fisherton",
     #     "review_link": "https://g.page/r/CfHbMERrsfVXEBM/review"
     # }
@@ -334,7 +334,7 @@ def enviar_mensajes_resena():
         print(f"Error al enviar mensajes de reseña: {e}")
 
 def run_scheduler():
-    schedule.every().hour.at(":50").do(job)  # Confirmaciones
+    schedule.every().hour.at(":13").do(job)  # Confirmaciones
     schedule.every().hour.at(":15").do(enviar_mensajes_resena)  # Mensajes de reseña
     while True:
         try:
