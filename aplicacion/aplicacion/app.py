@@ -171,7 +171,7 @@ def webhook():
                                                         color_id = '2'  # Verde (confirmado)
                                                         status = 'confirmed'
                                                     elif button_reply == 'no':
-                                                        color_id = '11'  # Rojo (cancelado)
+                                                        color_id = '4'  # Rojo (cancelado)
                                                         status = 'confirmed' #Se puede poner 'cancelled' si se quiere eliminar el evento
                                                     else:
                                                         color_id = '5'  # Amarillo (respuesta no válida)
@@ -334,7 +334,7 @@ def enviar_mensajes_resena():
         print(f"Error al enviar mensajes de reseña: {e}")
 
 def run_scheduler():
-    schedule.every().hour.at(":34").do(job)  # Confirmaciones
+    schedule.every().hour.at(":39").do(job)  # Confirmaciones
     schedule.every().hour.at(":15").do(enviar_mensajes_resena)  # Mensajes de reseña
     while True:
         try:
