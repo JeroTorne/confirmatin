@@ -11,6 +11,7 @@ import schedule
 import time
 import json
 import tempfile
+import re
 
 app = Flask(__name__)
 
@@ -180,7 +181,8 @@ def webhook():
                                                         status = 'tentative'
                                                         icono = "⚠️"
 
-                                                    nuevo_titulo = f"{icono} {event.get('summary', '')}"
+                                                    nombre_paciente = extract_patient_name(event_description)
+                                                    nuevo_titulo = f"{icono} Turno {nombre_paciente}"
 
                                                     print(f"Actualizando evento en {calendar_id} con color_id: {color_id}, status: {status}, título: {nuevo_titulo}")
                                                     try:
@@ -263,7 +265,9 @@ def extract_phone_number(description):
     match = re.search(r'(\d{8,15})', description)
     return match.group(1) if match else None
 
-
+def extract_patient_name(description):
+    match = re.search(r'Reservada por</b>:\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+)', description)
+    return match.group(1).strip() if match else "Paciente"
 
 def send_whatsapp_message(phone, message, whatsapp_token, whatsapp_phone_id):
     url = f"https://graph.facebook.com/v17.0/{whatsapp_phone_id}/messages"
