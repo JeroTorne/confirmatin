@@ -170,19 +170,17 @@ def webhook():
                                                     if button_reply == 'si':
                                                         color_id = '2'  # Verde (confirmado)
                                                         status = 'confirmed'
-                                                        icono = "🟢"
+                                                        icono = "✅"
                                                     elif button_reply == 'no':
                                                         color_id = '11'  # Rojo (cancelado)
                                                         status = 'confirmed'
-                                                        icono = "🔴"
+                                                        icono = "❌"
                                                     else:
                                                         color_id = '5'  # Amarillo (respuesta no válida)
                                                         status = 'tentative'
                                                         icono = "⚠️"
 
-                                                    event_description = event.get('description', '')
-                                                    nombre_paciente = extract_patient_name(event_description)
-                                                    nuevo_titulo = f"{icono} Turnos ({nombre_paciente})"
+                                                    nuevo_titulo = f"{icono} {event.get('summary', '')}"
 
                                                     print(f"Actualizando evento en {calendar_id} con color_id: {color_id}, status: {status}, título: {nuevo_titulo}")
                                                     try:
@@ -258,15 +256,6 @@ def confirmar_citas():
     except Exception as e:
         print(f"Error en confirmar_citas: {e}")
         return jsonify({'status': 'Error al confirmar citas', 'error': str(e)}), 500
-
-def extract_patient_name(description):
-    import re
-    match = re.search(r'Reservada por</b>\s*([A-Za-zÁÉÍÓÚáéíóúñÑ\s\(\)]+)', description)
-    if match:
-        # El nombre termina antes de la coma o salto de línea
-        nombre = match.group(1).split(',')[0].strip()
-        return nombre
-    return "Paciente"
 
 def extract_phone_number(description):
     import re
@@ -351,7 +340,7 @@ def enviar_mensajes_resena():
         print(f"Error al enviar mensajes de reseña: {e}")
 
 def run_scheduler():
-    schedule.every().hour.at(":35").do(job)  # Confirmaciones
+    schedule.every().hour.at(":00").do(job)  # Confirmaciones
     schedule.every().hour.at(":15").do(enviar_mensajes_resena)  # Mensajes de reseña
     while True:
         try:
