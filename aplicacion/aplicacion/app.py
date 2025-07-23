@@ -45,24 +45,27 @@ def get_secret(secret_name):
 CALENDAR_SECRET_CONFIG = {
     "corpuskinesiologiasl@gmail.com": {
         "google_credentials_secret": "google-credentials-corpus-vero",
-        "whatsapp_token_secret": "whatsapp-token-corpus-",
-        "whatsapp_phone_id_secret": "phone-id-corpus",
-        "verify_token_secret": "token-cliente-corpus-",
-    #    "review_link": "https://g.page/negocio-corpus/review"
+        "whatsapp_token_secret": "whatsapp-token-podologia-",
+        "whatsapp_phone_id_secret": "phone-id-podologia",
+        "verify_token_secret": "token-cliente-podologia-",
+        "nombre_empresa": "Verónica Digiannantonio Kinesiología",
+        "review_link": "https://g.page/r/CdBheRUiFHb_EBM/review"
     },
     "corpuskinesiologia2@gmail.com": {
         "google_credentials_secret": "google-credentials-corpus-guido",
-        "whatsapp_token_secret": "whatsapp-token-corpus-",
-        "whatsapp_phone_id_secret": "phone-id-corpus",
-        "verify_token_secret": "token-cliente-corpus-",
-    #    "review_link": "https://g.page/negocio-corpus2/review"
+        "whatsapp_token_secret": "whatsapp-token-podologia-",
+        "whatsapp_phone_id_secret": "phone-id-podologia",
+        "verify_token_secret": "token-cliente-podologia-",
+        "nombre_empresa": "Guido Bazzana (R.P.G)",
+        "review_link": "https://g.page/r/CdBheRUiFHb_EBM/review"
     },
     # "podologiafisherton@gmail.com": {
     #     "google_credentials_secret": "google-credentials-podologia",
     #     "whatsapp_token_secret": "whatsapp-token-podologia-",
     #     "whatsapp_phone_id_secret": "phone-id-podologia",
-    #     "verify_token_secret": "token-cliente-podologia-"
-    #     "review_link": "https://g.page/negocio-corpus2/review"
+    #     "verify_token_secret": "token-cliente-podologia-",
+    #     "nombre_empresa": "Veronica Weedon Podología Fisherton",
+    #     "review_link": "https://g.page/r/CfHbMERrsfVXEBM/review"
     # }
 }
 # ----------- FIN CARGAR DICCIONARIO CALENDARIOS CADA SECRETO --------------
@@ -234,7 +237,8 @@ def confirmar_citas():
                     start_datetime = event["start"]["dateTime"]
                     start_date = datetime.datetime.strptime(start_datetime[:10], '%Y-%m-%d').strftime('%d/%m/%Y')
                     start_time = start_datetime[11:16]
-                    message = f'Hola, ¿confirmas tu cita para el {start_date} a las {start_time}?'
+                    nombre_empresa = config.get("nombre_empresa", "la empresa")
+                    message = f'Hola, ¿confirmas tu cita con {nombre_empresa} para el día {start_date} a las {start_time}?'
 
                     # Enviar mensaje de WhatsApp
                     print(f"Enviando mensaje a {phone}: {message}")
