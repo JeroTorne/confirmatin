@@ -48,7 +48,7 @@ CALENDAR_SECRET_CONFIG = {
         "whatsapp_token_secret": "whatsapp-token-corpus",
         "whatsapp_phone_id_secret": "phone-id-corpus",
         "verify_token_secret": "token-cliente-corpus",
-        "nombre_empresa": "Verónica Digiannantonio Kinesiología",
+        "nombre_empresa": "Verónica Di Giannantonio Kinesiología",
         "review_link": "https://g.page/r/CdBheRUiFHb_EBM/review"
     },
     "corpuskinesiologia2@gmail.com": {
@@ -334,7 +334,7 @@ def enviar_mensajes_resena():
         print(f"Error al enviar mensajes de reseña: {e}")
 
 def run_scheduler():
-    schedule.every().hour.at(":30").do(job)  # Confirmaciones
+    schedule.every().hour.at(":35").do(job)  # Confirmaciones
     schedule.every().hour.at(":15").do(enviar_mensajes_resena)  # Mensajes de reseña
     while True:
         try:
