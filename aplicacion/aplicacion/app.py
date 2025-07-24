@@ -49,7 +49,7 @@ CALENDAR_SECRET_CONFIG = {
         "whatsapp_phone_id_secret": "phone-id-CitaFy",
         "verify_token_secret": "token-cliente-confirmatin-developer",
         "nombre_empresa": "Verónica Di Giannantonio Kinesiología",
-        "review_link": "https://g.page/r/CdBheRUiFHb_EBM/review"
+        # "review_link": "https://g.page/r/CdBheRUiFHb_EBM/review"
     },
     "corpuskinesiologia2@gmail.com": {
         "google_credentials_secret": "google-credentials-corpus-guido",
@@ -57,7 +57,7 @@ CALENDAR_SECRET_CONFIG = {
         "whatsapp_phone_id_secret": "phone-id-CitaFy",
         "verify_token_secret": "token-cliente-confirmatin-developer",
         "nombre_empresa": "Guido Bazzana (R.P.G)",
-        "review_link": "https://g.page/r/CdBheRUiFHb_EBM/review"
+        # "review_link": "https://g.page/r/CdBheRUiFHb_EBM/review"
     },
     # "podologiafisherton@gmail.com": {
     #     "google_credentials_secret": "google-credentials-podologia",
@@ -244,13 +244,16 @@ def confirmar_citas():
                     start_date = datetime.datetime.strptime(start_datetime[:10], '%Y-%m-%d').strftime('%d/%m/%Y')
                     start_time = start_datetime[11:16]
                     nombre_empresa = config.get("nombre_empresa", "la empresa")
-                    message = f'Hola, ¿confirmas tu cita con {nombre_empresa} para el día {start_date} a las {start_time}?'
-
-                    # Enviar mensaje de WhatsApp
-                    print(f"Enviando mensaje a {phone}: {message}")
+                    
+                    template_params = [
+                        nombre_empresa,
+                        start_date,
+                        start_time
+                    ]
+                    
                     whatsapp_token = get_secret_cached(config["whatsapp_token_secret"])
                     whatsapp_phone_id = get_secret_cached(config["whatsapp_phone_id_secret"])
-                    send_whatsapp_message(phone, message, whatsapp_token, whatsapp_phone_id)
+                    send_whatsapp_template(phone, whatsapp_token, whatsapp_phone_id, template_params)
 
         return jsonify({'status': 'Mensajes enviados'})
     except Exception as e:
@@ -265,7 +268,7 @@ def extract_phone_number(description):
 
 
 
-def send_whatsapp_message(phone, message, whatsapp_token, whatsapp_phone_id):
+def send_whatsapp_template(phone, whatsapp_token, whatsapp_phone_id, template_params):
     url = f"https://graph.facebook.com/v17.0/{whatsapp_phone_id}/messages"
     headers = {
         "Authorization": f"Bearer {whatsapp_token}",
@@ -274,25 +277,31 @@ def send_whatsapp_message(phone, message, whatsapp_token, whatsapp_phone_id):
     payload = {
         "messaging_product": "whatsapp",
         "to": phone,
-        "type": "interactive",
-        "interactive": {
-            "type": "button",
-            "body": {"text": message},
-            "action": {
-                "buttons": [
-                    {"type": "reply", "reply": {"id": "si", "title": "Sí"}},
-                    {"type": "reply", "reply": {"id": "no", "title": "No"}}
-                ]
-            }
+        "type": "template",
+        "template": {
+            "name": "confirmarturno",
+            "language": {
+                "code": "es_AR"
+            },
+            "components": [
+                {
+                    "type": "body",
+                    "parameters": [
+                        {"type": "text", "text": template_params[0]},  # nombre_empresa
+                        {"type": "text", "text": template_params[1]},  # fecha
+                        {"type": "text", "text": template_params[2]}   # hora
+                    ]
+                }
+            ]
         }
     }
 
     try:
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
-        print(f"Mensaje enviado a {phone}: {message}")
+        print(f"Mensaje de plantilla enviado a {phone}")
     except requests.exceptions.RequestException as e:
-        print(f"Error al enviar mensaje a {phone}: {e}")
+        print(f"Error al enviar mensaje de plantilla: {e}")
         if e.response is not None:
             print("Respuesta de la API:", e.response.text)
 
@@ -300,12 +309,12 @@ def job():
     with app.app_context():
         confirmar_citas()
 
-def send_review_request(phone, whatsapp_token, whatsapp_phone_id, review_link):
-    review_message = (
-        "¡Gracias por tu visita! ¿Podrías dejarnos una reseña en Google Maps? "
-        f"Tu opinión es muy importante para nosotros. {review_link}"
-    )
-    send_whatsapp_message(phone, review_message, whatsapp_token, whatsapp_phone_id)
+# def send_review_request(phone, whatsapp_token, whatsapp_phone_id, review_link):
+#     review_message = (
+#         "¡Gracias por tu visita! ¿Podrías dejarnos una reseña en Google Maps? "
+#         f"Tu opinión es muy importante para nosotros. {review_link}"
+#     )
+#     send_whatsapp_message(phone, review_message, whatsapp_token, whatsapp_phone_id)
 
 def enviar_mensajes_resena():
     try:
@@ -340,7 +349,7 @@ def enviar_mensajes_resena():
         print(f"Error al enviar mensajes de reseña: {e}")
 
 def run_scheduler():
-    schedule.every().hour.at(":18").do(job)  # Confirmaciones
+    schedule.every().hour.at(":17").do(job)  # Confirmaciones
     schedule.every().hour.at(":15").do(enviar_mensajes_resena)  # Mensajes de reseña
     while True:
         try:
