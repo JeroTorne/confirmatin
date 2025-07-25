@@ -448,7 +448,7 @@ def enviar_mensajes_resena():
         print(f"Error al enviar mensajes de reseña: {e}")
 
 def run_scheduler():
-    schedule.every().hour.at(":37").do(job)  # Confirmaciones
+    schedule.every().hour.at(":00").do(job)  # Confirmaciones
     schedule.every(10).minutes.do(enviar_mensajes_resena)  # Mensajes de reseña cada 10 minutos
     while True:
         try:
